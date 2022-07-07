@@ -18,4 +18,7 @@ public class Queries {
     public static final String INSERT_MEAL = "INSERT INTO meals (user_id, meal_name, calories, price, date) VALUES (:userId,:mealName,:calories,:price,:date) RETURNING *";
     public static final String DELETE_MEAL = "DELETE FROM meals WHERE id = :id RETURNING *";
     public static final String DELETE_ALL_MEALS_FOR_USER = "DELETE FROM meals WHERE user_id = :userId RETURNING *";
+    public static final String GET_AUTH_BY_TOKEN = "SELECT * FROM auth WHERE token = :token";
+    public static final String GET_AUTH_BY_USER_ID = "SELECT * FROM auth WHERE user_id = :userId";
+    public static final String UPDATE_TOKEN = "UPDATE auth SET token = :token, expiry = :expiry WHERE user_id = :userId RETURNING *";
 }

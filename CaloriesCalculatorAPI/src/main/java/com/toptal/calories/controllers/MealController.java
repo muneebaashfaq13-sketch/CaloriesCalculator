@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 import java.util.Map;
 
 @RestController
+@CrossOrigin
 public class MealController {
 
     @Autowired
