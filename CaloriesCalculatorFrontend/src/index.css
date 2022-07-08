@@ -5,6 +5,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-image: url('https://blog.mercy.com/wp-content/uploads/2020/06/Calories_1200x628-1200x610.jpg');
+  background-size: cover;
 }
 
 code {

@@ -1,48 +1,46 @@
 import React from 'react';
-import { useRef, useState, useEffect, useContext } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import { Container, Paper} from '@material-ui/core';
+import { Container, Paper } from '@material-ui/core';
 import VerifiedUserRoundedIcon from '@mui/icons-material/VerifiedUserRounded';
-import AuthContext from '../context/AuthProvider';
 import axios from '../api/axios';
+import { useNavigate } from 'react-router-dom';
 
-
-const LOGIN_URL = '/auth';
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    '& > *': {
-      margin: theme.spacing(1),
-    },
-  }
+    root: {
+        '& > *': {
+            margin: theme.spacing(1),
+        },
+    }
 }));
 
 const customStyle = {
     largeIcon: {
-      width: 60,
-      height: 60,
+        width: 60,
+        height: 60,
     },
     paperStyle: {
-        padding: "50px 20px",
+        padding: '50px 20px',
         width: 600,
-        margin: "20px auto",
+        margin: '20px auto',
         elevation: 3,
     },
     error: {
-        color: "red",
+        color: 'red',
     },
-  };
+};
 
 export default function Authenticate() {
     const classes = useStyles();
-    const { setAuth } = useContext(AuthContext);
     const tokenRef = useRef();
     const errRef = useRef();
 
     const [token, setToken] = useState('');
     const [errMsg, setErrMsg] = useState('');
-    const [success, setSuccess] = useState(false);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         tokenRef.current.focus();
@@ -54,19 +52,29 @@ export default function Authenticate() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         try {
-            const response = await axios.get(LOGIN_URL+"/"+token,
+
+            const response = await axios.get('/auth/' + token,
                 {
                     headers: { 'Content-Type': 'application/json' }
                 }
             );
-            console.log(JSON.stringify(response?.data));
-            const accessToken = response?.data?.accessToken;
-            const roles = response?.data?.roles;
-            setAuth({ token, roles, accessToken });
+
+            const userId = response?.data?.id;
+            const role = response?.data?.role;
+
             setToken('');
-            setSuccess(true);
+
+            localStorage.setItem("state", JSON.stringify({ userId, token, role }));
+
+            if (role === 'Admin')
+                navigate('/admin', { replace: true });
+            else if (role === 'User')
+                navigate('/user', { replace: true });
+            else
+                navigate('/login', { replace: true });
+
         } catch (err) {
             if (!err?.response) {
                 setErrMsg('No Server Response');
@@ -84,48 +92,34 @@ export default function Authenticate() {
     }
 
     return (
-        <>
-            {
-                success ? 
-                (<section>
-                    <h1>You are logged in!</h1>
-                    <br />
-                    <p>
-                        <a href="#">Go to Home</a>
-                    </p>
-                </section>
-                ) : 
-                (<section>
-                    <Paper style={customStyle.paperStyle}>
-                            <Container>
-                                <form className={classes.root} onSubmit={handleSubmit}>
-                
-                                    <VerifiedUserRoundedIcon style={customStyle.largeIcon}/>
-                
-                                    <h1>Please Authentication</h1>
-                
-                                    <p>Paste the token against the User to Login.</p>
-                
-                                    <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive" style={customStyle.error}>{errMsg}</p>
+        <section>
+            <Paper style={customStyle.paperStyle}>
+                <Container>
+                    <form className={classes.root} onSubmit={handleSubmit}>
 
-                                    <TextField id="token" 
-                                    label="Token" 
-                                    variant="outlined" 
-                                    ref={tokenRef}
-                                    autoComplete="off"
-                                    onChange={(e) => setToken(e.target.value)}
-                                    value={token}
-                                    required
-                                    fullWidth/>
-                
-                                    <button variant="contained" className='Submit-button'>Authenticate</button>
-            
-                                </form>
-                            </Container>
-                        </Paper>
-                    </section>
-                )
-            }
-        </>
+                        <VerifiedUserRoundedIcon style={customStyle.largeIcon} />
+
+                        <h1>Please Authenticate</h1>
+
+                        <p>Paste the token against the User to Login.</p>
+
+                        <p ref={errRef} className={errMsg ? 'errmsg' : 'offscreen'} aria-live='assertive' style={customStyle.error}>{errMsg}</p>
+
+                        <TextField id='token'
+                            label='Token'
+                            variant='outlined'
+                            ref={tokenRef}
+                            autoComplete='off'
+                            onChange={(e) => setToken(e.target.value)}
+                            value={token}
+                            required
+                            fullWidth />
+
+                        <button variant='contained' className='Submit-button'>Authenticate</button>
+
+                    </form>
+                </Container>
+            </Paper>
+        </section>
     );
 }
