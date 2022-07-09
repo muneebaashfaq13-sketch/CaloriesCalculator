@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Map;
 
@@ -44,14 +45,28 @@ public class MealController {
         return response;
     }
 
-    @GetMapping("/meals/userMeals/{userId}")
+    @GetMapping("/meals/userMealsByDate/{userId}")
     public ResponseEntity<Object> getAllMealsForUserOnDate(@PathVariable(value = "userId") final long userId,
-                                                           @RequestParam(required = false, defaultValue = "2022-07-06 00:00:00") Timestamp date) {
+                                                           @RequestParam(required = true, defaultValue = "0000-00-00") Date date) {
 
         ResponseEntity<Object> response;
 
         try {
             response = new ResponseEntity<>(mealService.fetchAllMealsForUserOnDate(userId, date), HttpStatus.OK);
+        } catch (Exception e) {
+            response = new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+        return response;
+    }
+
+    @GetMapping("/meals/earliestMealDate/{userId}")
+    public ResponseEntity<Object> getEarliestMealDate(@PathVariable(value = "userId") final long userId) {
+
+        ResponseEntity<Object> response;
+
+        try {
+            response = new ResponseEntity<>(mealService.fetchEarliestMealDate(userId), HttpStatus.OK);
         } catch (Exception e) {
             response = new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

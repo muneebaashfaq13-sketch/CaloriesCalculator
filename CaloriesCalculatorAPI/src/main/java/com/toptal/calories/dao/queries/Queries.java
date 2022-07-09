@@ -14,7 +14,8 @@ public class Queries {
     public static final String DELETE_USER = "DELETE FROM users WHERE id = :id RETURNING *";
     public static final String GET_ALL_MEALS = "SELECT * FROM meals";
     public static final String GET_SPECIFIC_MEAL = "SELECT * FROM meals WHERE id = :id";
-    public static final String GET_ALL_MEALS_FOR_USER_ON_DATE = "SELECT * FROM meals WHERE user_id = :userId AND DATE(date) = DATE(:date)";
+    public static final String GET_ALL_MEALS_FOR_USER_ON_DATE = "SELECT * FROM meals WHERE user_id = :userId AND DATE(date) = :date";
+    public static final String GET_EARLIEST_DATE = "SELECT DATE(MIN(date)) FROM meals WHERE user_id = :userId";
     public static final String INSERT_MEAL = "INSERT INTO meals (user_id, meal_name, calories, price, date) VALUES (:userId,:mealName,:calories,:price,:date) RETURNING *";
     public static final String DELETE_MEAL = "DELETE FROM meals WHERE id = :id RETURNING *";
     public static final String DELETE_ALL_MEALS_FOR_USER = "DELETE FROM meals WHERE user_id = :userId RETURNING *";

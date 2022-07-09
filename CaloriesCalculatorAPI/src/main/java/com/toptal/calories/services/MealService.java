@@ -5,6 +5,7 @@ import com.toptal.calories.models.Meal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -22,8 +23,12 @@ public class MealService {
         return mealDao.fetchSpecificMeal(id);
     }
 
-    public List<Meal> fetchAllMealsForUserOnDate(long userId, Timestamp date) {
+    public List<Meal> fetchAllMealsForUserOnDate(long userId, Date date) {
         return mealDao.fetchAllMealsForUserOnDate(userId, date);
+    }
+
+    public String fetchEarliestMealDate(long userId) {
+        return mealDao.fetchEarliestMealDate(userId);
     }
 
     public Meal addMeal(long userId, String mealName, int calories, int price, Timestamp date) {

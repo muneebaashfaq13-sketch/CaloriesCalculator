@@ -63,10 +63,13 @@ export default function Authenticate() {
 
             const userId = response?.data?.id;
             const role = response?.data?.role;
+            const name = response?.data?.name;
+            const expenseLimit = response?.data?.expenseLimit;
+            const caloriesLimit = response?.data?.caloriesLimit;
 
             setToken('');
 
-            localStorage.setItem("state", JSON.stringify({ userId, token, role }));
+            localStorage.setItem("state", JSON.stringify({ userId, token, role, name, expenseLimit, caloriesLimit }));
 
             if (role === 'Admin')
                 navigate('/admin', { replace: true });
@@ -115,7 +118,7 @@ export default function Authenticate() {
                             required
                             fullWidth />
 
-                        <button variant='contained' className='Submit-button'>Authenticate</button>
+                        <button variant='contained' className='authenticate-button'>Authenticate</button>
 
                     </form>
                 </Container>
