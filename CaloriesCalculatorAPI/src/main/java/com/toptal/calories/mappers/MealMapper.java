@@ -16,7 +16,7 @@ public class MealMapper implements RowMapper<Meal> {
                 rs.getString("meal_name"),
                 rs.getInt("calories"),
                 rs.getInt("price"),
-                rs.getTimestamp("date")
+                rs.getString("date")
         );
     }
 }

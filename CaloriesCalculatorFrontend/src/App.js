@@ -3,8 +3,8 @@ import RequireAuth from './components/RequireAuth';
 import { Routes, Route } from 'react-router-dom';
 import Authenticate from './components/Authenticate';
 import Layout from './components/Layout';
-import Admin from './components/Admin';
-import User from './components/User';
+import Admin from './components/admin/Admin';
+import User from './components/user/User';
 
 function App() {
 
@@ -14,16 +14,16 @@ function App() {
 
         <Route path="login" element={<Authenticate />} />
 
-        <Route element={<RequireAuth allowedRoles={['Admin']}/>}>
+        <Route element={<RequireAuth allowedRoles={['Admin']} />}>
           <Route path="admin" element={<Admin />} />
         </Route>
 
-        <Route element={<RequireAuth allowedRoles={['User']}/>}>
+        <Route element={<RequireAuth allowedRoles={['User']} />}>
           <Route path="user" element={<User />} />
         </Route>
-        </Route>
+      </Route>
 
-        <Route path="*" element={<Authenticate />} />
+      <Route path="*" element={<Authenticate />} />
     </Routes>
   );
 }

@@ -13,15 +13,52 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.List;
 
 @Service
-public class AuthService {
+public class UserAndAuthService {
+
+    @Autowired
+    private UserDao userDao;
 
     @Autowired
     private AuthDao authDao;
 
-    @Autowired
-    private UserDao userDao;
+    public List<User> fetchAllUsers() {
+        return userDao.fetchAllUsers();
+    }
+
+    public HashMap<String, Object> fetchSpecificUser(long id) {
+        HashMap<String, Object> userInfo = new HashMap<>();
+        User user = userDao.fetchSpecificUser(id);
+        AuthObject auth = authDao.getAuth(user.getId());
+        userInfo.put("user", user);
+        userInfo.put("auth", auth);
+        return userInfo;
+    }
+
+    public User updateCaloriesLimit(long id, int caloriesLimit) {
+        return userDao.updateCaloriesLimit(id, caloriesLimit);
+    }
+
+    public User updateExpenseLimit(long id, int expenseLimit) {
+        return userDao.updateExpenseLimit(id, expenseLimit);
+    }
+
+    public HashMap<String, Object> addUser(String name, String role) {
+        HashMap<String, Object> userInfo = new HashMap<>();
+        User user = userDao.addUser(name, role);
+        Timestamp newTimestamp = new Timestamp(System.currentTimeMillis() + Constants.MINUTES_TO_ADD * 60000);
+        AuthObject auth = authDao.addToken(user.getId(), Utils.generateNewToken(user.getId()), newTimestamp);
+        userInfo.put("user", user);
+        userInfo.put("auth", auth);
+        return userInfo;
+    }
+
+    public User deleteUser(long id) {
+        return userDao.deleteUser(id);
+    }
 
     public User getAuth(String token) throws ExpireException, UserException {
 
@@ -70,6 +107,5 @@ public class AuthService {
             throw e;
         }
     }
-
 
 }

@@ -37,5 +37,12 @@ public class AuthDao {
         return namedParameterJdbcTemplate.queryForObject(Queries.UPDATE_TOKEN, inQueryParams, new AuthObjectMapper());
     }
 
+    public AuthObject addToken(long userId, String token, Timestamp expiry) {
+        MapSqlParameterSource inQueryParams = new MapSqlParameterSource();
+        inQueryParams.addValue(Constants.USER_ID, userId);
+        inQueryParams.addValue(Constants.TOKEN, token);
+        inQueryParams.addValue(Constants.EXPIRY, expiry);
+        return namedParameterJdbcTemplate.queryForObject(Queries.INSERT_TOKEN, inQueryParams, new AuthObjectMapper());
+    }
 
 }

@@ -17,7 +17,6 @@ body {
   flex-direction: column;
   min-height: 600px;
   background: black;
-  text-align: center;
   margin: 100px 100px;
   border-radius: 10px;
 }
@@ -106,4 +105,43 @@ body {
   text-align: center;
   font-size: 16px;
   border-radius: 12px;
+}
+
+.paperStyle {
+  padding: '50px 20px';
+  width: 600;
+  margin: '20px auto';
+  text-align: 'center';
+  align-items: 'center';
+  
+}
+
+.error-message {
+  color: red;
+}
+
+.in-limit {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin: 4px auto;
+  color: white;
+  background: green;
+  font-size: 16px;
+  padding: 16px;
+  border-radius: 5px;
+  width: 40%;
+}
+
+.out-limit {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin: 4px auto;
+  color: white;
+  background: red;
+  font-size: 16px;
+  padding: 16px;
+  border-radius: 5px;
+  width: 40%;
 }

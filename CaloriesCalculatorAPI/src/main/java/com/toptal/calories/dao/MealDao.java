@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.List;
 
 @Repository
@@ -36,13 +35,19 @@ public class MealDao {
         return namedParameterJdbcTemplate.query(Queries.GET_ALL_MEALS_FOR_USER_ON_DATE, inQueryParams, new MealMapper());
     }
 
+    public List<Meal> fetchAllMealsForUser(long userId) {
+        MapSqlParameterSource inQueryParams = new MapSqlParameterSource();
+        inQueryParams.addValue(Constants.USER_ID, userId);
+        return namedParameterJdbcTemplate.query(Queries.GET_ALL_MEALS_FOR_USER, inQueryParams, new MealMapper());
+    }
+
     public String fetchEarliestMealDate(long userId) {
         MapSqlParameterSource inQueryParams = new MapSqlParameterSource();
         inQueryParams.addValue(Constants.USER_ID, userId);
         return namedParameterJdbcTemplate.queryForObject(Queries.GET_EARLIEST_DATE, inQueryParams, String.class);
     }
 
-    public Meal addMeal(long userId, String mealName, int calories, int price, Timestamp date) {
+    public Meal addMeal(long userId, String mealName, int calories, int price, Date date) {
         MapSqlParameterSource inQueryParams = new MapSqlParameterSource();
         inQueryParams.addValue(Constants.USER_ID, userId);
         inQueryParams.addValue(Constants.MEAL_NAME, mealName);

@@ -6,7 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
-import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -27,11 +28,27 @@ public class MealService {
         return mealDao.fetchAllMealsForUserOnDate(userId, date);
     }
 
+    public HashMap<String, List<Meal>> fetchAllMealsForUser(long userId) {
+        HashMap<String, List<Meal>> mealsMap = new HashMap<>();
+        List<Meal> meals = mealDao.fetchAllMealsForUser(userId);
+
+        for (Meal meal : meals) {
+            List<Meal> temp = mealsMap.get(meal.getDate());
+            if (temp == null) {
+                temp = new ArrayList<>();
+            }
+            temp.add(meal);
+            mealsMap.put(meal.getDate(), temp);
+        }
+
+        return mealsMap;
+    }
+
     public String fetchEarliestMealDate(long userId) {
         return mealDao.fetchEarliestMealDate(userId);
     }
 
-    public Meal addMeal(long userId, String mealName, int calories, int price, Timestamp date) {
+    public Meal addMeal(long userId, String mealName, int calories, int price, Date date) {
         return mealDao.addMeal(userId, mealName, calories, price, date);
     }
 

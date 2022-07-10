@@ -1,7 +1,5 @@
 package com.toptal.calories.models;
 
-import java.sql.Timestamp;
-
 public class Meal {
 
     private Long id;
@@ -9,9 +7,9 @@ public class Meal {
     private String mealName;
     private Integer calories;
     private Integer price;
-    private Timestamp date;
+    private String date;
 
-    public Meal(Long id, Long userId, String mealName, Integer calories, Integer price, Timestamp date) {
+    public Meal(Long id, Long userId, String mealName, Integer calories, Integer price, String date) {
         this.id = id;
         this.userId = userId;
         this.mealName = mealName;
@@ -60,11 +58,11 @@ public class Meal {
         this.price = price;
     }
 
-    public Timestamp getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Timestamp date) {
+    public void setDate(String date) {
         this.date = date;
     }
 }

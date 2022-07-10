@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.Map;
 
 @RestController
@@ -60,6 +59,20 @@ public class MealController {
         return response;
     }
 
+    @GetMapping("/meals/allMealsForUser/{userId}")
+    public ResponseEntity<Object> getAllMealsForUser(@PathVariable(value = "userId") final long userId) {
+
+        ResponseEntity<Object> response;
+
+        try {
+            response = new ResponseEntity<>(mealService.fetchAllMealsForUser(userId), HttpStatus.OK);
+        } catch (Exception e) {
+            response = new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+        return response;
+    }
+
     @GetMapping("/meals/earliestMealDate/{userId}")
     public ResponseEntity<Object> getEarliestMealDate(@PathVariable(value = "userId") final long userId) {
 
@@ -84,7 +97,7 @@ public class MealController {
                     params.get("mealName"),
                     Integer.parseInt(params.get("calories")),
                     Integer.parseInt(params.get("price")),
-                    Timestamp.valueOf(params.get("date"))),
+                    Date.valueOf(params.get("date"))),
                     HttpStatus.OK);
         } catch (Exception e) {
             response = new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

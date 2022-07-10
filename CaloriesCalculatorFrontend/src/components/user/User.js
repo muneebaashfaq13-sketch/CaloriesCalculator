@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "../api/axios";
+import axios from "../../api/axios";
+import AddMeal from "./AddMeal";
 import UserDatewiseList from "./UserDatewiseList";
 
-const GET_ALL_MEALS = '/meals/userMealsByDate/';
+const GET_ALL_MEALS = '/meals/allMealsForUser/';
 const GET_EARLIEST_DATE = '/meals/earliestMealDate/'
 
 const User = () => {
     const state = JSON.parse(localStorage.getItem("state"));
     const navigate = useNavigate();
 
-    const [meals, setMeals] = useState([]);
+    const [meals, setMeals] = useState(new Map());
+    const [addButtonStatus, setAddButtonStatus] = useState(false);
     const [userEarliestMealDate, setEarliestDate] = useState('');
 
     function getCurrentDate() {
@@ -23,12 +25,20 @@ const User = () => {
         return today;
     }
 
+    function addRecord() {
+        setAddButtonStatus(true);
+    }
+
+    function back() {
+        setAddButtonStatus(false);
+        window.location.reload();
+    }
 
     useEffect(() => {
         async function getMeals() {
             try {
 
-                if (!userEarliestMealDate.length) {
+                if (userEarliestMealDate.length === 0) {
                     const getEarliestDate = await axios.get(GET_EARLIEST_DATE + state.userId,
                         {
                             headers: { 'Content-Type': 'application/json' }
@@ -37,17 +47,14 @@ const User = () => {
                     setEarliestDate(getEarliestDate.data);
                 }
 
-                if (!meals.length && userEarliestMealDate.length) {
+                if (meals.size === 0 && userEarliestMealDate.length !== 0) {
                     const response = await axios.get(GET_ALL_MEALS + state.userId,
                         {
-                            headers: { 'Content-Type': 'application/json' },
-                            params: { 'date': userEarliestMealDate }
+                            headers: { 'Content-Type': 'application/json' }
                         }
                     );
-                    setMeals(response.data); 
+                    setMeals(response.data);
                 }
-                console.log(meals);
-                console.log(userEarliestMealDate);
 
             } catch (err) {
                 console.log(err);
@@ -62,18 +69,36 @@ const User = () => {
     };
 
     return (
+
         <div className="main-div">
             <h1 className="welcome-header">{'Welcome to User Portal, ' + state.name + '!'}</h1>
             <button className="logout-button" onClick={logout}>Logout</button>
-            <button className="add-button" onClick={logout}>Add</button>
-            <UserDatewiseList
-                meals={meals}
-                startDate={userEarliestMealDate}
-                endDate={getCurrentDate()}
-                caloriesLimit={state.caloriesLimit}
-                expenseLimit={state.expenseLimit}
-            />
-            <h1 className="welcome-header">__________</h1>
+            {addButtonStatus ?
+                (
+                    <>
+                        <button className="add-button" onClick={back}>Back</button>
+                        <AddMeal
+                            userId={state.userId}
+                            currentDate={getCurrentDate()}
+                        />
+                        <h1 className="welcome-header">__________</h1>
+                    </>
+                )
+                :
+                (
+                    <>
+                        <button className="add-button" onClick={addRecord}>Add</button>
+                        <UserDatewiseList
+                            mealsMap={meals}
+                            startDate={userEarliestMealDate}
+                            endDate={getCurrentDate()}
+                            caloriesLimit={state.caloriesLimit}
+                            expenseLimit={state.expenseLimit}
+                        />
+                        <h1 className="welcome-header">__________</h1>
+                    </>
+                )
+            }
         </div>
     )
 }

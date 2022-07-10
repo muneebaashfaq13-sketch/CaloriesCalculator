@@ -2,7 +2,7 @@ package com.toptal.calories.controllers;
 
 import com.toptal.calories.exceptions.ExpireException;
 import com.toptal.calories.exceptions.UserException;
-import com.toptal.calories.services.AuthService;
+import com.toptal.calories.services.UserAndAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     @Autowired
-    private AuthService authService;
+    private UserAndAuthService authService;
 
     @GetMapping("/auth/{token}")
     public ResponseEntity<Object> authenticate(@PathVariable(value = "token") final String token) {

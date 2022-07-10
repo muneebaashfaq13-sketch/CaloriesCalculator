@@ -6,22 +6,31 @@ const RequireAuth = ({ allowedRoles }) => {
     const location = useLocation();
 
     useEffect(() => {
-        async function getToken(){
+        async function getToken() {
             try {
 
-                await axios.get('/auth/' + JSON.parse(localStorage.getItem("state")).token,
+                const response = await axios.get('/auth/' + JSON.parse(localStorage.getItem("state")).token,
                     {
                         headers: { 'Content-Type': 'application/json' }
                     }
                 );
-    
+
+                const userId = response?.data?.id;
+                const role = response?.data?.role;
+                const name = response?.data?.name;
+                const expenseLimit = response?.data?.expenseLimit;
+                const caloriesLimit = response?.data?.caloriesLimit;
+                const token = JSON.parse(localStorage.getItem("state")).token
+
+                localStorage.setItem("state", JSON.stringify({ userId, token, role, name, expenseLimit, caloriesLimit }));
+
+
             } catch (err) {
                 localStorage.removeItem("state");
             }
         }
         getToken();
     }, [])
-
     
     return (
         allowedRoles.includes(JSON.parse(localStorage.getItem("state"))?.role)

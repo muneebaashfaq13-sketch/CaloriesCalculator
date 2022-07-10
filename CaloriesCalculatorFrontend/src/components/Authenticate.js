@@ -7,6 +7,7 @@ import VerifiedUserRoundedIcon from '@mui/icons-material/VerifiedUserRounded';
 import axios from '../api/axios';
 import { useNavigate } from 'react-router-dom';
 
+const AUTH = '/auth/';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -26,9 +27,7 @@ const customStyle = {
         width: 600,
         margin: '20px auto',
         elevation: 3,
-    },
-    error: {
-        color: 'red',
+        textAlign:'center'
     },
 };
 
@@ -55,7 +54,7 @@ export default function Authenticate() {
 
         try {
 
-            const response = await axios.get('/auth/' + token,
+            const response = await axios.get(AUTH + token,
                 {
                     headers: { 'Content-Type': 'application/json' }
                 }
@@ -106,7 +105,7 @@ export default function Authenticate() {
 
                         <p>Paste the token against the User to Login.</p>
 
-                        <p ref={errRef} className={errMsg ? 'errmsg' : 'offscreen'} aria-live='assertive' style={customStyle.error}>{errMsg}</p>
+                        <p ref={errRef} aria-live='assertive' className='error-message'>{errMsg}</p>
 
                         <TextField id='token'
                             label='Token'
