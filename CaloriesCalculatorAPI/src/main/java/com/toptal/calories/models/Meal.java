@@ -3,14 +3,17 @@ package com.toptal.calories.models;
 public class Meal {
 
     private Long id;
+
+    private String userName;
     private Long userId;
     private String mealName;
     private Integer calories;
     private Integer price;
     private String date;
 
-    public Meal(Long id, Long userId, String mealName, Integer calories, Integer price, String date) {
+    public Meal(Long id, String userName, Long userId, String mealName, Integer calories, Integer price, String date) {
         this.id = id;
+        this.userName = userName;
         this.userId = userId;
         this.mealName = mealName;
         this.calories = calories;
@@ -24,6 +27,14 @@ public class Meal {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public Long getUserId() {

@@ -47,9 +47,10 @@ public class MealDao {
         return namedParameterJdbcTemplate.queryForObject(Queries.GET_EARLIEST_DATE, inQueryParams, String.class);
     }
 
-    public Meal addMeal(long userId, String mealName, int calories, int price, Date date) {
+    public Meal addMeal(long userId, String userName, String mealName, int calories, int price, Date date) {
         MapSqlParameterSource inQueryParams = new MapSqlParameterSource();
         inQueryParams.addValue(Constants.USER_ID, userId);
+        inQueryParams.addValue(Constants.USER_NAME, userName);
         inQueryParams.addValue(Constants.MEAL_NAME, mealName);
         inQueryParams.addValue(Constants.CALORIES, calories);
         inQueryParams.addValue(Constants.PRICE, price);

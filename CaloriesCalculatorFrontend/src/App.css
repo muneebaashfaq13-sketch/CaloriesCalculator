@@ -107,13 +107,27 @@ body {
   border-radius: 12px;
 }
 
+.report-button {
+  margin-top: 110px;
+  margin-right: 290px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #046daa;
+  border: none;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  font-size: 16px;
+  border-radius: 12px;
+}
+
 .paperStyle {
   padding: '50px 20px';
   width: 600;
   margin: '20px auto';
   text-align: 'center';
   align-items: 'center';
-  
 }
 
 .error-message {
@@ -144,4 +158,32 @@ body {
   padding: 16px;
   border-radius: 5px;
   width: 40%;
+}
+
+.edit-button {
+  background-color: #04AA6D;
+  border: none;
+  color: white;
+  padding: 4px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.delete-button {
+  background-color: #aa041a;
+  border: none;
+  color: white;
+  padding: 4px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
 }

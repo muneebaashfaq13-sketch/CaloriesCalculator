@@ -1,6 +1,6 @@
 package com.toptal.calories.controllers;
 
-import com.toptal.calories.services.MealService;
+import com.toptal.calories.services.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import java.util.Map;
 public class MealController {
 
     @Autowired
-    private MealService mealService;
+    private JobService mealService;
 
     @GetMapping("/meals")
     public ResponseEntity<Object> getAllMeals() {

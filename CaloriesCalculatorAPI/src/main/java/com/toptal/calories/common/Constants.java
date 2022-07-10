@@ -5,6 +5,7 @@ public class Constants {
     public static final int CALORIES_LIMIT = 2100;
     public static final int MINUTES_TO_ADD = 30;
     public static final String USER_ID = "userId";
+    public static final String USER_NAME = "userName";
     public static final String ID = "id";
     public static final String CALORIES_LIMIT_LITERAL = "caloriesLimit";
     public static final String EXPENSE_LIMIT_LITERAL = "expenseLimit";

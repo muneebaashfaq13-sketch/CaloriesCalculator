@@ -3,21 +3,26 @@ package com.toptal.calories.services;
 import com.toptal.calories.common.Constants;
 import com.toptal.calories.common.Utils;
 import com.toptal.calories.dao.AuthDao;
+import com.toptal.calories.dao.MealDao;
 import com.toptal.calories.dao.UserDao;
 import com.toptal.calories.exceptions.ExpireException;
 import com.toptal.calories.exceptions.UserException;
 import com.toptal.calories.models.AuthObject;
+import com.toptal.calories.models.Meal;
 import com.toptal.calories.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
-public class UserAndAuthService {
+public class JobService {
 
     @Autowired
     private UserDao userDao;
@@ -25,11 +30,14 @@ public class UserAndAuthService {
     @Autowired
     private AuthDao authDao;
 
+    @Autowired
+    private MealDao mealDao;
+
     public List<User> fetchAllUsers() {
         return userDao.fetchAllUsers();
     }
 
-    public HashMap<String, Object> fetchSpecificUser(long id) {
+    public Map<String, Object> fetchSpecificUser(long id) {
         HashMap<String, Object> userInfo = new HashMap<>();
         User user = userDao.fetchSpecificUser(id);
         AuthObject auth = authDao.getAuth(user.getId());
@@ -46,7 +54,7 @@ public class UserAndAuthService {
         return userDao.updateExpenseLimit(id, expenseLimit);
     }
 
-    public HashMap<String, Object> addUser(String name, String role) {
+    public Map<String, Object> addUser(String name, String role) {
         HashMap<String, Object> userInfo = new HashMap<>();
         User user = userDao.addUser(name, role);
         Timestamp newTimestamp = new Timestamp(System.currentTimeMillis() + Constants.MINUTES_TO_ADD * 60000);
@@ -106,6 +114,51 @@ public class UserAndAuthService {
         } catch (Exception e) {
             throw e;
         }
+    }
+
+    public List<Meal> fetchAllMeals() {
+        return mealDao.fetchAllMeals();
+    }
+
+    public Meal fetchSpecificMeal(long id) {
+        return mealDao.fetchSpecificMeal(id);
+    }
+
+    public List<Meal> fetchAllMealsForUserOnDate(long userId, Date date) {
+        return mealDao.fetchAllMealsForUserOnDate(userId, date);
+    }
+
+    public Map<String, List<Meal>> fetchAllMealsForUser(long userId) {
+        HashMap<String, List<Meal>> mealsMap = new HashMap<>();
+        List<Meal> meals = mealDao.fetchAllMealsForUser(userId);
+
+        for (Meal meal : meals) {
+            List<Meal> temp = mealsMap.get(meal.getDate());
+            if (temp == null) {
+                temp = new ArrayList<>();
+            }
+            temp.add(meal);
+            mealsMap.put(meal.getDate(), temp);
+        }
+
+        return mealsMap;
+    }
+
+    public String fetchEarliestMealDate(long userId) {
+        return mealDao.fetchEarliestMealDate(userId);
+    }
+
+    public Meal addMeal(long userId, String mealName, int calories, int price, Date date) {
+        User user = userDao.fetchSpecificUser(userId);
+        return mealDao.addMeal(userId, user.getName(), mealName, calories, price, date);
+    }
+
+    public Meal deleteMeal(long id) {
+        return mealDao.deleteMeal(id);
+    }
+
+    public List<Meal> deleteAllMealsForUser(long userId) {
+        return mealDao.deleteAllMealsForUser(userId);
     }
 
 }

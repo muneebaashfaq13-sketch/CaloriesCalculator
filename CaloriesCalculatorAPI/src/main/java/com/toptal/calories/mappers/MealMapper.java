@@ -12,6 +12,7 @@ public class MealMapper implements RowMapper<Meal> {
     public Meal mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new Meal(
                 rs.getLong("id"),
+                rs.getString("user_name"),
                 rs.getLong("user_id"),
                 rs.getString("meal_name"),
                 rs.getInt("calories"),
