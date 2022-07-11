@@ -1,8 +1,9 @@
 import { Container, makeStyles, Paper, TextField } from "@material-ui/core";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "../../api/axios";
 
 const ADD_MEAL = '/meals/';
+const IDS_LIST = '/users/idsList'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -12,9 +13,11 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const AddMeal = ({ userId, currentDate }) => {
+const AddMealAdmin = () => {
     const classes = useStyles();
 
+    const userIdRef = useRef();
+    const [userId, setUserId] = useState();
     const mealNameRef = useRef();
     const [mealName, setMealName] = useState('');
     const caloriesRef = useRef();
@@ -22,7 +25,11 @@ const AddMeal = ({ userId, currentDate }) => {
     const priceRef = useRef();
     const [price, setPrice] = useState(1);
     const dateRef = useRef();
-    const [date, setDate] = useState(currentDate);
+    const [date, setDate] = useState('');
+    const errRef = useRef();
+    const [errMsg, setErrMsg] = useState('');
+    const [idsList, setIdsList] = useState([]);
+
 
     const customStyle = {
         paperStyle: {
@@ -34,29 +41,70 @@ const AddMeal = ({ userId, currentDate }) => {
         },
     };
 
+    useEffect(() => {
+        async function getIds() {
+            try {
+
+                if (idsList.length === 0) {
+                    const response = await axios.get(IDS_LIST,
+                        {
+                            headers: { 'Content-Type': 'application/json' }
+                        }
+                    );
+                    setIdsList(response.data);
+                }
+
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        getIds();
+    })
+
+    useEffect(() => {
+        setErrMsg('');
+    }, [userId])
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
+            var isValidId = false;
 
-            await axios.post(ADD_MEAL + userId,
-                {
-                    mealName,
-                    calories,
-                    price,
-                    date
-                }
-            );
+            idsList.forEach(id => {
+                if (Number(userId) === id)
+                    isValidId = true;
+            });
 
-            setMealName('');
-            setCalories(1);
-            setPrice(1);
-            setDate(currentDate);
-            alert('Item Added Successfully!');
+            if (isValidId) {
+                await axios.post(ADD_MEAL + userId,
+                    {
+                        mealName,
+                        calories,
+                        price,
+                        date
+                    }
+                );
+
+                setUserId('');
+                setMealName('');
+                setCalories(1);
+                setPrice(1);
+                setDate('');
+                setErrMsg('');
+                alert('Item Added Successfully!');
+
+            } else {
+                setErrMsg('Not A valid User-ID');
+            }
+
 
         } catch (err) {
             if (err.response?.status === 400) {
-                alert('Invalid Data-type!');
+                setErrMsg('Request Exception! Please validate.');
+            }
+            else {
+                setErrMsg('Service not available!');
             }
         }
     }
@@ -66,6 +114,17 @@ const AddMeal = ({ userId, currentDate }) => {
             <Paper style={customStyle.paperStyle}>
                 <Container>
                     <form className={classes.root} onSubmit={handleSubmit}>
+                        <p ref={errRef} aria-live='assertive' className='error-message'>{errMsg}</p>
+                        <TextField id='userId'
+                            type='number'
+                            label='User-ID'
+                            variant='outlined'
+                            ref={userIdRef}
+                            autoComplete='off'
+                            onChange={(e) => setUserId(e.target.value)}
+                            value={userId}
+                            required
+                            fullWidth />
 
                         <TextField id='mealName'
                             label='Meal Name'
@@ -99,8 +158,9 @@ const AddMeal = ({ userId, currentDate }) => {
                             required
                             fullWidth />
 
-                        <TextField id="date"
-                            label="Date"
+                        <TextField id='date'
+                            type='date'
+                            label='Date'
                             variant='outlined'
                             ref={dateRef}
                             autoComplete='off'
@@ -108,7 +168,7 @@ const AddMeal = ({ userId, currentDate }) => {
                             value={date}
                             required
                             fullWidth
-                            type="date"
+
                             className={classes.textField}
                             InputLabelProps={{
                                 shrink: true,
@@ -125,4 +185,4 @@ const AddMeal = ({ userId, currentDate }) => {
 
 };
 
-export default AddMeal;
+export default AddMealAdmin;

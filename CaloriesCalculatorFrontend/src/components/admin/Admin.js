@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../../api/axios";
+import AddMealAdmin from "./AddMealAdmin";
+import AdminReport from "./AdminReport";
 import DatewiseListAdmin from "./DatewiseListAdmin";
 
 const GET_ALL_MEALS = '/meals/allMealsByDate';
@@ -61,13 +63,11 @@ const Admin = () => {
                         <button className="add-button" onClick={back}>Back</button>
                         {addButtonStatus ?
                             (
-                                <>
-                                </>
+                                <AddMealAdmin/>
                             )
                             :
                             (
-                                <>
-                                </>
+                                <AdminReport/>
                             )
 
                         }

@@ -29,6 +29,20 @@ public class UserController {
         return response;
     }
 
+    @GetMapping("/users/idsList")
+    public ResponseEntity<Object> getAllUserId() {
+
+        ResponseEntity<Object> response;
+
+        try {
+            response = new ResponseEntity<>(userService.fetchAllUserId(), HttpStatus.OK);
+        } catch (Exception e) {
+            response = new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+        return response;
+    }
+
     @GetMapping("/users/{id}")
     public ResponseEntity<Object> getUser(@PathVariable(value = "id") final long id) {
 

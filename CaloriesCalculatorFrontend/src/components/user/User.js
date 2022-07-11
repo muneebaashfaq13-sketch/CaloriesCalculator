@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../../api/axios";
-import AddMeal from "./AddMeal";
+import AddMealUser from "./AddMealUser";
 import UserDatewiseList from "./UserDatewiseList";
 
 const GET_ALL_MEALS = '/meals/allMealsForUser/';
@@ -77,7 +77,7 @@ const User = () => {
                 (
                     <>
                         <button className="add-button" onClick={back}>Back</button>
-                        <AddMeal
+                        <AddMealUser
                             userId={state.userId}
                             currentDate={getCurrentDate()}
                         />

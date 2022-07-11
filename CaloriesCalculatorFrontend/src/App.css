@@ -38,6 +38,12 @@ body {
   font-size: 24px;
 }
 
+.report-header {
+  margin: 32px auto;
+  color: black;
+  font-size: 24px;
+}
+
 .user-list-row {
   display: flex;
   justify-content: space-between;

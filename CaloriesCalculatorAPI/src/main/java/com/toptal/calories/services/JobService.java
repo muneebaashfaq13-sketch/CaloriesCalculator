@@ -9,6 +9,7 @@ import com.toptal.calories.exceptions.ExpireException;
 import com.toptal.calories.exceptions.UserException;
 import com.toptal.calories.models.AuthObject;
 import com.toptal.calories.models.Meal;
+import com.toptal.calories.models.ReportObject;
 import com.toptal.calories.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -16,10 +17,10 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Service
 public class JobService {
@@ -35,6 +36,15 @@ public class JobService {
 
     public List<User> fetchAllUsers() {
         return userDao.fetchAllUsers();
+    }
+
+    public List<Long> fetchAllUserId() {
+        List<Long> ids = new ArrayList<>();
+        List<User> users = userDao.fetchAllUsers();
+        for (User user : users) {
+            ids.add(user.getId());
+        }
+        return ids;
     }
 
     public Map<String, Object> fetchSpecificUser(long id) {
@@ -125,7 +135,7 @@ public class JobService {
     }
 
     public Map<String, List<Meal>> fetchAllMealsByDate() {
-        HashMap<String,List<Meal>> mealsMap = new HashMap<>();
+        HashMap<String, List<Meal>> mealsMap = new HashMap<>();
         List<Meal> meals = mealDao.fetchAllMeals();
 
         for (Meal meal : meals) {
@@ -136,8 +146,10 @@ public class JobService {
             temp.add(meal);
             mealsMap.put(meal.getDate(), temp);
         }
+        Map<String, List<Meal>> sortedMap = new TreeMap<>(Collections.reverseOrder());
+        sortedMap.putAll(mealsMap);
 
-        return mealsMap;
+        return sortedMap;
     }
 
     public Map<String, List<Meal>> fetchAllMealsForUser(long userId) {
@@ -153,7 +165,10 @@ public class JobService {
             mealsMap.put(meal.getDate(), temp);
         }
 
-        return mealsMap;
+        Map<String, List<Meal>> sortedMap = new TreeMap<>(Collections.reverseOrder());
+        sortedMap.putAll(mealsMap);
+
+        return sortedMap;
     }
 
     public String fetchEarliestMealDate(long userId) {
@@ -177,4 +192,60 @@ public class JobService {
         return mealDao.deleteAllMealsForUser(userId);
     }
 
+    public List<ReportObject> getReport() {
+        //current week
+        LocalDate today = LocalDate.now();
+        LocalDate currentWeekMonday = today;
+        while (currentWeekMonday.getDayOfWeek() != DayOfWeek.MONDAY) {
+            currentWeekMonday = currentWeekMonday.minusDays(1);
+        }
+        LocalDate currentWeekSunday = today;
+        while (currentWeekSunday.getDayOfWeek() != DayOfWeek.SUNDAY) {
+            currentWeekSunday = currentWeekSunday.plusDays(1);
+        }
+
+        //previous week
+        LocalDate previous = today.minusDays(7);
+        LocalDate prevWeekMonday = previous;
+        while (prevWeekMonday.getDayOfWeek() != DayOfWeek.MONDAY) {
+            prevWeekMonday = prevWeekMonday.minusDays(1);
+        }
+        LocalDate prevWeekSunday = previous;
+        while (prevWeekSunday.getDayOfWeek() != DayOfWeek.SUNDAY) {
+            prevWeekSunday = prevWeekSunday.plusDays(1);
+        }
+
+        int currentWeekTotalCount = 0;
+        int prevWeekTotalCount = 0;
+        float currentWeekAvgCal = 0.0f;
+        float prevWeekAvgCal = 0.0f;
+
+        List<Meal> meals = mealDao.fetchAllMeals();
+        for (Meal meal : meals) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate date = LocalDate.parse(meal.getDate(), formatter);
+
+            if ((date.isAfter(currentWeekMonday) && date.isBefore(currentWeekSunday))
+                    || date.isEqual(currentWeekMonday) || date.isEqual(currentWeekSunday)) {
+                currentWeekTotalCount++;
+                currentWeekAvgCal += meal.getCalories();
+            }
+
+            if ((date.isAfter(prevWeekMonday) && date.isBefore(prevWeekSunday))
+                    || date.isEqual(prevWeekMonday) || date.isEqual(prevWeekSunday)) {
+                prevWeekTotalCount++;
+                prevWeekAvgCal += meal.getCalories();
+            }
+        }
+        if (currentWeekTotalCount > 0)
+            currentWeekAvgCal = currentWeekAvgCal / currentWeekTotalCount;
+        if (prevWeekTotalCount > 0)
+            prevWeekAvgCal = prevWeekAvgCal / prevWeekTotalCount;
+
+        List<ReportObject> returnList = new ArrayList<>();
+        returnList.add(new ReportObject(currentWeekTotalCount, currentWeekAvgCal));
+        returnList.add(new ReportObject(prevWeekTotalCount, prevWeekAvgCal));
+
+        return returnList;
+    }
 }
