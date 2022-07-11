@@ -12,12 +12,12 @@ public class Queries {
     public static final String UPDATE_EXPENSE_LIMIT = "UPDATE users SET expense_limit = :expenseLimit WHERE id = :id RETURNING *";
     public static final String INSERT_USER = "INSERT INTO users (name, role, calories_limit, expense_limit) VALUES (:name,:role,:caloriesLimit,:expenseLimit) RETURNING *";
     public static final String DELETE_USER = "DELETE FROM users WHERE id = :id RETURNING *";
-    public static final String GET_ALL_MEALS = "SELECT * FROM meals ORDER BY date DESC";
+    public static final String GET_ALL_MEALS = "SELECT * FROM meals ORDER BY date,id DESC";
     public static final String GET_SPECIFIC_MEAL = "SELECT * FROM meals WHERE id = :id";
-    public static final String GET_ALL_MEALS_FOR_USER_ON_DATE = "SELECT * FROM meals WHERE user_id = :userId AND DATE(date) = :date";
     public static final String GET_ALL_MEALS_FOR_USER = "SELECT * FROM meals WHERE user_id = :userId ORDER BY date DESC";
     public static final String GET_EARLIEST_DATE = "SELECT DATE(MIN(date)) FROM meals WHERE user_id = :userId";
     public static final String INSERT_MEAL = "INSERT INTO meals (user_id, meal_name, calories, price, date, user_name) VALUES (:userId,:mealName,:calories,:price,:date,:userName) RETURNING *";
+    public static final String UPDATE_MEAL = "UPDATE meals SET meal_name = :mealName, calories = :calories, price = :price, date = :date  WHERE id = :id RETURNING *";
     public static final String DELETE_MEAL = "DELETE FROM meals WHERE id = :id RETURNING *";
     public static final String DELETE_ALL_MEALS_FOR_USER = "DELETE FROM meals WHERE user_id = :userId RETURNING *";
     public static final String GET_AUTH_BY_TOKEN = "SELECT * FROM auth WHERE token = :token";

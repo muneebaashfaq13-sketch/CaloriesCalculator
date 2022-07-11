@@ -1,22 +1,15 @@
-import { Container } from "@material-ui/core";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../../api/axios";
-import MealsListAdmin from "./MealsListAdmin";
+import DatewiseListAdmin from "./DatewiseListAdmin";
 
-const customStyle = {
-    centerAlign: {
-        textAlign: 'center'
-    },
-};
-
-const GET_ALL_MEALS = '/meals';
+const GET_ALL_MEALS = '/meals/allMealsByDate';
 
 const Admin = () => {
     const state = JSON.parse(localStorage.getItem("state"));
     const navigate = useNavigate();
 
-    const [meals, setMeals] = useState([]);
+    const [meals, setMeals] = useState(new Map());
     const [addButtonStatus, setAddButtonStatus] = useState(false);
     const [reportButtonStatus, setReportButtonStatus] = useState(false);
 
@@ -37,7 +30,7 @@ const Admin = () => {
         async function getData() {
             try {
 
-                if (meals.length === 0) {
+                if (meals.size === 0) {
                     const allMeals = await axios.get(GET_ALL_MEALS,
                         {
                             headers: { 'Content-Type': 'application/json' }
@@ -85,16 +78,8 @@ const Admin = () => {
                     <>
                         <button className="add-button" onClick={addRecord}>Add</button>
                         <button className="report-button" onClick={report}>Report</button>
-                        <div className='user-list-columns'>
-                            <Container><b>User Name</b></Container>
-                            <Container><b>Meal Name</b></Container>
-                            <Container style={customStyle.centerAlign} ><b>Calories</b></Container>
-                            <Container style={customStyle.centerAlign} ><b>Price($)</b></Container>
-                            <Container style={customStyle.centerAlign} ><b>Date</b></Container>
-                            <Container style={customStyle.centerAlign} ><b>Action</b></Container>
-                        </div>
-                        <MealsListAdmin
-                            allMeal={meals}
+                        <DatewiseListAdmin
+                            mealsMap={meals}
                         />
                     </>
                 )

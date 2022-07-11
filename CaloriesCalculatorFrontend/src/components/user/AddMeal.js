@@ -25,10 +25,6 @@ const AddMeal = ({ userId, currentDate }) => {
     const [date, setDate] = useState(currentDate);
 
     const customStyle = {
-        largeIcon: {
-            width: 60,
-            height: 60,
-        },
         paperStyle: {
             padding: '50px 20px',
             width: 600,
@@ -82,6 +78,7 @@ const AddMeal = ({ userId, currentDate }) => {
                             fullWidth />
 
                         <TextField id='calories'
+                            type='number'
                             label='Calories'
                             variant='outlined'
                             ref={caloriesRef}
@@ -92,6 +89,7 @@ const AddMeal = ({ userId, currentDate }) => {
                             fullWidth />
 
                         <TextField id='price'
+                            type='number'
                             label='Price'
                             variant='outlined'
                             ref={priceRef}

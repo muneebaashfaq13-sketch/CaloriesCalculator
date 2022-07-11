@@ -18,16 +18,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const customStyle = {
-    largeIcon: {
-        width: 60,
-        height: 60,
-    },
     paperStyle: {
         padding: '50px 20px',
         width: 600,
         margin: '20px auto',
         elevation: 3,
-        textAlign:'center'
+        textAlign: 'center'
     },
 };
 

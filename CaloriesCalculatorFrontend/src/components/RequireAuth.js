@@ -31,10 +31,10 @@ const RequireAuth = ({ allowedRoles }) => {
         }
         getToken();
     }, [])
-    
+
     return (
         allowedRoles.includes(JSON.parse(localStorage.getItem("state"))?.role)
-        ? <Outlet/> : <Navigate to='/login' state={{ from: location }} replace />
+            ? <Outlet /> : <Navigate to='/login' state={{ from: location }} replace />
     );
 }
 

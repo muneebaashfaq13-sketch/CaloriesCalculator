@@ -124,8 +124,20 @@ public class JobService {
         return mealDao.fetchSpecificMeal(id);
     }
 
-    public List<Meal> fetchAllMealsForUserOnDate(long userId, Date date) {
-        return mealDao.fetchAllMealsForUserOnDate(userId, date);
+    public Map<String, List<Meal>> fetchAllMealsByDate() {
+        HashMap<String,List<Meal>> mealsMap = new HashMap<>();
+        List<Meal> meals = mealDao.fetchAllMeals();
+
+        for (Meal meal : meals) {
+            List<Meal> temp = mealsMap.get(meal.getDate());
+            if (temp == null) {
+                temp = new ArrayList<>();
+            }
+            temp.add(meal);
+            mealsMap.put(meal.getDate(), temp);
+        }
+
+        return mealsMap;
     }
 
     public Map<String, List<Meal>> fetchAllMealsForUser(long userId) {
@@ -151,6 +163,10 @@ public class JobService {
     public Meal addMeal(long userId, String mealName, int calories, int price, Date date) {
         User user = userDao.fetchSpecificUser(userId);
         return mealDao.addMeal(userId, user.getName(), mealName, calories, price, date);
+    }
+
+    public Meal updateMeal(long id, String mealName, int calories, int price, Date date) {
+        return mealDao.updateMeal(id, mealName, calories, price, date);
     }
 
     public Meal deleteMeal(long id) {

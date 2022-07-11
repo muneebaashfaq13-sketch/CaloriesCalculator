@@ -1,12 +1,6 @@
 import { Container } from "@material-ui/core";
 import MealsListUser from "./MealsListUser";
 
-const customStyle = {
-    centerAlign: {
-        textAlign: 'center'
-    },
-};
-
 function total(meals, attrib) {
     var sum = 0;
 
@@ -37,8 +31,8 @@ const UserDatewiseList = ({ mealsMap, startDate, endDate, caloriesLimit, expense
             <div className={inLimit(values[1], 'price', expenseLimit) ? 'in-limit' : 'out-limit'}>{'Expense: ' + total(values[1], 'price') + '/' + expenseLimit}</div>
             <div className='user-list-columns'>
                 <Container><b>Name</b></Container>
-                <Container style={customStyle.centerAlign} ><b>Calories</b></Container>
-                <Container style={customStyle.centerAlign} ><b>Price($)</b></Container>
+                <Container className="container-alignment" ><b>Calories(kCal)</b></Container>
+                <Container className="container-alignment" ><b>Price($)</b></Container>
             </div>
             <MealsListUser
                 meals={values[1]}

@@ -44,14 +44,13 @@ public class MealController {
         return response;
     }
 
-    @GetMapping("/meals/userMealsByDate/{userId}")
-    public ResponseEntity<Object> getAllMealsForUserOnDate(@PathVariable(value = "userId") final long userId,
-                                                           @RequestParam(required = true, defaultValue = "0000-00-00") Date date) {
+    @GetMapping("/meals/allMealsByDate")
+    public ResponseEntity<Object> getAllMealsByDate() {
 
         ResponseEntity<Object> response;
 
         try {
-            response = new ResponseEntity<>(mealService.fetchAllMealsForUserOnDate(userId, date), HttpStatus.OK);
+            response = new ResponseEntity<>(mealService.fetchAllMealsByDate(), HttpStatus.OK);
         } catch (Exception e) {
             response = new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -80,6 +79,25 @@ public class MealController {
 
         try {
             response = new ResponseEntity<>(mealService.fetchEarliestMealDate(userId), HttpStatus.OK);
+        } catch (Exception e) {
+            response = new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+        return response;
+    }
+
+    @PutMapping("/meals/{id}")
+    public ResponseEntity<Object> updateMeal(@PathVariable(value = "id") final long id,
+                                             @RequestBody Map<String, String> params) {
+
+        ResponseEntity<Object> response;
+        try {
+            response = new ResponseEntity<>(mealService.updateMeal(id,
+                    params.get("mealName"),
+                    Integer.parseInt(params.get("calories")),
+                    Integer.parseInt(params.get("price")),
+                    Date.valueOf(params.get("date"))),
+                    HttpStatus.OK);
         } catch (Exception e) {
             response = new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

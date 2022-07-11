@@ -28,13 +28,6 @@ public class MealDao {
         return namedParameterJdbcTemplate.queryForObject(Queries.GET_SPECIFIC_MEAL, inQueryParams, new MealMapper());
     }
 
-    public List<Meal> fetchAllMealsForUserOnDate(long userId, Date date) {
-        MapSqlParameterSource inQueryParams = new MapSqlParameterSource();
-        inQueryParams.addValue(Constants.USER_ID, userId);
-        inQueryParams.addValue(Constants.DATE, date);
-        return namedParameterJdbcTemplate.query(Queries.GET_ALL_MEALS_FOR_USER_ON_DATE, inQueryParams, new MealMapper());
-    }
-
     public List<Meal> fetchAllMealsForUser(long userId) {
         MapSqlParameterSource inQueryParams = new MapSqlParameterSource();
         inQueryParams.addValue(Constants.USER_ID, userId);
@@ -56,6 +49,16 @@ public class MealDao {
         inQueryParams.addValue(Constants.PRICE, price);
         inQueryParams.addValue(Constants.DATE, date);
         return namedParameterJdbcTemplate.queryForObject(Queries.INSERT_MEAL, inQueryParams, new MealMapper());
+    }
+
+    public Meal updateMeal(long id, String mealName, int calories, int price, Date date) {
+        MapSqlParameterSource inQueryParams = new MapSqlParameterSource();
+        inQueryParams.addValue(Constants.ID, id);
+        inQueryParams.addValue(Constants.MEAL_NAME, mealName);
+        inQueryParams.addValue(Constants.CALORIES, calories);
+        inQueryParams.addValue(Constants.PRICE, price);
+        inQueryParams.addValue(Constants.DATE, date);
+        return namedParameterJdbcTemplate.queryForObject(Queries.UPDATE_MEAL, inQueryParams, new MealMapper());
     }
 
     public Meal deleteMeal(long id) {

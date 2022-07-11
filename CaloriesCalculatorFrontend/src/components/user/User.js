@@ -81,7 +81,6 @@ const User = () => {
                             userId={state.userId}
                             currentDate={getCurrentDate()}
                         />
-                        <h1 className="welcome-header">__________</h1>
                     </>
                 )
                 :
@@ -95,10 +94,10 @@ const User = () => {
                             caloriesLimit={state.caloriesLimit}
                             expenseLimit={state.expenseLimit}
                         />
-                        <h1 className="welcome-header">__________</h1>
                     </>
                 )
             }
+            <h1 className="welcome-header">__________</h1>
         </div>
     )
 }
