@@ -152,8 +152,8 @@ class JobServiceTest {
     void testAddMeal() {
         Date date = Date.valueOf(meal.getDate());
         PowerMockito.when(userDao.fetchSpecificUser(user.getId())).thenReturn(user);
-        PowerMockito.when(mealDao.addMeal(user.getId(),user.getName(),meal.getMealName(),meal.getCalories(),meal.getPrice(),date)).thenReturn(meal);
-        Meal returnValue = jobService.addMeal(user.getId(),meal.getMealName(),meal.getCalories(),meal.getPrice(),date);
+        PowerMockito.when(mealDao.addMeal(user.getId(), user.getName(), meal.getMealName(), meal.getCalories(), meal.getPrice(), date)).thenReturn(meal);
+        Meal returnValue = jobService.addMeal(user.getId(), meal.getMealName(), meal.getCalories(), meal.getPrice(), date);
         Assertions.assertEquals(meal.getId(), returnValue.getId());
     }
 
@@ -161,7 +161,7 @@ class JobServiceTest {
     void testUpdateMeal() {
         Date date = Date.valueOf(meal.getDate());
         PowerMockito.when(mealDao.updateMeal(meal.getId(), meal.getMealName(), meal.getCalories(), meal.getPrice(), date)).thenReturn(meal);
-        Meal returnValue = jobService.updateMeal(meal.getId(),meal.getMealName(),meal.getCalories(),meal.getPrice(),date);
+        Meal returnValue = jobService.updateMeal(meal.getId(), meal.getMealName(), meal.getCalories(), meal.getPrice(), date);
         Assertions.assertEquals(meal.getId(), returnValue.getId());
     }
 

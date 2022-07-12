@@ -24,23 +24,43 @@ function inLimit(meals, attrib, limit) {
 
 const UserDatewiseList = ({ mealsMap, startDate, endDate, caloriesLimit, expenseLimit }) => {
 
-    return Object.entries(mealsMap).map((values) => (
-        <div className='list-datewise'>
-            <h1 className="welcome-header">{'Date: ' + values[0]}</h1>
-            <div className={inLimit(values[1], 'calories', caloriesLimit) ? 'in-limit' : 'out-limit'}>{'Calories: ' + total(values[1], 'calories') + '/' + caloriesLimit}</div>
-            <div className={inLimit(values[1], 'price', expenseLimit) ? 'in-limit' : 'out-limit'}>{'Expense: ' + total(values[1], 'price') + '/' + expenseLimit}</div>
-            <div className='user-list-columns'>
-                <Container><b>Name</b></Container>
-                <Container className="container-alignment" ><b>Calories(kCal)</b></Container>
-                <Container className="container-alignment" ><b>Price($)</b></Container>
-            </div>
-            <MealsListUser
-                meals={values[1]}
-            />
-            <h1 className="welcome-header">__________</h1>
-        </div>
-    ));
+    const inRange = (recordDate) => {
+        var dr = new Date(recordDate);
+        var ds = new Date(startDate);
+        var de = new Date(endDate);
+        if(dr>=ds && dr<=de)
+            return true;
+        return false;
+    }
 
+    return Object.entries(mealsMap).map((values) => (
+        <>
+            {inRange(values[0]) ?
+                (
+                    <div className='list-datewise'>
+                        <h1 className="welcome-header">{'Date: ' + values[0]}</h1>
+                        <div className={inLimit(values[1], 'calories', caloriesLimit) ? 'in-limit' : 'out-limit'}>{'Calories: ' + total(values[1], 'calories') + '/' + caloriesLimit}</div>
+                        <div className={inLimit(values[1], 'price', expenseLimit) ? 'in-limit' : 'out-limit'}>{'Expense: ' + total(values[1], 'price') + '/' + expenseLimit}</div>
+                        <div className='user-list-columns'>
+                            <Container><b>Name</b></Container>
+                            <Container className="container-alignment" ><b>Calories(kCal)</b></Container>
+                            <Container className="container-alignment" ><b>Price($)</b></Container>
+                        </div>
+                        <MealsListUser
+                            meals={values[1]}
+                        />
+                        <h1 className="welcome-header">__________</h1>
+                    </div>
+                )
+                :
+                (
+                    <>
+
+                    </>
+                )
+            }
+        </>
+    ));
 };
 
 export default UserDatewiseList;

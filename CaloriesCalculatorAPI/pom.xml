@@ -17,6 +17,7 @@
 	<description>Backend service for calorie calculator for TopTal home assessment</description>
 	<properties>
 		<java.version>11</java.version>
+		<sonar.coverage.exclusions>**/controllers/**,**/dao/**,**/exceptions/**,**/mappers/**,**/commons/Constants.java</sonar.coverage.exclusions>
 	</properties>
 
 	<dependencies>

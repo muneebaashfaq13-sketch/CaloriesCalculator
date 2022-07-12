@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { Container, TextField } from "@material-ui/core";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../../api/axios";
 import AddMealUser from "./AddMealUser";
@@ -13,7 +14,10 @@ const User = () => {
 
     const [meals, setMeals] = useState(new Map());
     const [addButtonStatus, setAddButtonStatus] = useState(false);
-    const [userEarliestMealDate, setEarliestDate] = useState('');
+    const startDateRef = useRef();
+    const [startDate, setStartDate] = useState('');
+    const endDateRef = useRef();
+    const [endDate, setEndDate] = useState('');
 
     function getCurrentDate() {
         var today = new Date();
@@ -38,22 +42,26 @@ const User = () => {
         async function getMeals() {
             try {
 
-                if (userEarliestMealDate.length === 0) {
+                if (startDate.length === 0) {
                     const getEarliestDate = await axios.get(GET_EARLIEST_DATE + state.userId,
                         {
                             headers: { 'Content-Type': 'application/json' }
                         }
                     );
-                    setEarliestDate(getEarliestDate.data);
+                    setStartDate(getEarliestDate.data);
                 }
 
-                if (meals.size === 0 && userEarliestMealDate.length !== 0) {
+                if (meals.size === 0 && startDate.length !== 0) {
                     const response = await axios.get(GET_ALL_MEALS + state.userId,
                         {
                             headers: { 'Content-Type': 'application/json' }
                         }
                     );
                     setMeals(response.data);
+                }
+
+                if (endDate.length === 0 && meals.size !== 0 && startDate.length !== 0) {
+                    setEndDate(getCurrentDate());
                 }
 
             } catch (err) {
@@ -73,32 +81,61 @@ const User = () => {
         <div className="main-div">
             <h1 className="welcome-header">{'Welcome to User Portal, ' + state.name + '!'}</h1>
             <button className="logout-button" onClick={logout}>Logout</button>
-            {addButtonStatus ?
-                (
-                    <>
-                        <button className="add-button" onClick={back}>Back</button>
-                        <AddMealUser
-                            userId={state.userId}
-                            currentDate={getCurrentDate()}
-                        />
-                    </>
-                )
-                :
-                (
-                    <>
-                        <button className="add-button" onClick={addRecord}>Add</button>
-                        <UserDatewiseList
-                            mealsMap={meals}
-                            startDate={userEarliestMealDate}
-                            endDate={getCurrentDate()}
-                            caloriesLimit={state.caloriesLimit}
-                            expenseLimit={state.expenseLimit}
-                        />
-                    </>
-                )
+            {
+                addButtonStatus ?
+                    (
+                        <>
+                            <button className="add-button" onClick={back}>Back</button>
+                            <AddMealUser
+                                userId={state.userId}
+                                currentDate={getCurrentDate()}
+                            />
+                        </>
+                    )
+                    :
+                    (
+                        <>
+                            <div className='user-list-columns'>
+                                <Container>
+                                    <TextField id='startDate'
+                                        type='date'
+                                        label='Start Date'
+                                        variant='outlined'
+                                        ref={startDateRef}
+                                        autoComplete='off'
+                                        onChange={(e) => setStartDate(e.target.value)}
+                                        value={startDate}
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
+                                    />
+                                    <TextField id='endDate'
+                                        type='date'
+                                        label='End Date'
+                                        variant='outlined'
+                                        ref={endDateRef}
+                                        autoComplete='off'
+                                        onChange={(e) => setEndDate(e.target.value)}
+                                        value={endDate}
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
+                                    />
+                                </Container>
+                            </div>
+                            <button className="add-button" onClick={addRecord}>Add</button>
+                            <UserDatewiseList
+                                mealsMap={meals}
+                                startDate={startDate}
+                                endDate={endDate}
+                                caloriesLimit={state.caloriesLimit}
+                                expenseLimit={state.expenseLimit}
+                            />
+                        </>
+                    )
             }
             <h1 className="welcome-header">__________</h1>
-        </div>
+        </div >
     )
 }
 
